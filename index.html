@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuickPOS</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>QuickPOS</h2>
+    <div class="nav-links">
+        <a href="/procurement">Procurement</a>
+        <a href="/inventory">Inventory</a>
+        <a href="/products">Products</a>
+        <a href="/">Sales & Billing</a>
+    </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="products" id="products"></div>
+
+<!-- RECEIPT (BOTTOM) -->
+<div class="bill" id="bill">
+
+    <h3>🧾 Receipt</h3>
+
+    <div id="receipt"></div>
+
+    <p>Subtotal: $<span id="subtotal">0</span></p>
+    <p>Tax (8%): $<span id="tax">0</span></p>
+    <h3>Total: $<span id="total">0</span></h3>
+
+    <button onclick="completeSale()">Complete Sale</button>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

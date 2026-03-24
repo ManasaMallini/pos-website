@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>QuickPOS</h2>
+    <div class="nav-links">
+        <a href="/procurement">Procurement</a>
+        <a href="/inventory">Inventory</a>
+        <a href="/products">Products</a>
+        <a href="/">Sales & Billing</a>
+    </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="dashboard">
+
+    <!-- LEFT: CARDS -->
+    <div class="cards">
+        <div class="card">
+            <h2>552</h2>
+            <small>Total Stock</small>
+        </div>
+
+        <div class="card">
+            <h2>$14,049</h2>
+            <small>Stock Value</small>
+        </div>
+
+        <div class="card">
+            <h2>$7,331</h2>
+            <small>Profit</small>
+        </div>
+
+        <div class="card">
+            <h2>1 / 2</h2>
+            <small>Low Stock</small>
+        </div>
+    </div>
+
+    <!-- RIGHT: GRAPH -->
+    <div class="chart-box">
+        <canvas id="chart"></canvas>
+    </div>
+
+</div>
+
+<script>
+const ctx = document.getElementById('chart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
+        datasets: [
+            {
+                label: 'Revenue',
+                data: [18,22,30,20,25,28],
+                backgroundColor: '#14b8a6'
+            },
+            {
+                label: 'Cost',
+                data: [10,14,18,15,16,17],
+                backgroundColor: '#fb7185'
+            },
+            {
+                label: 'Profit',
+                data: [8,8,12,5,9,11],
+                backgroundColor: '#22c55e'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            duration: 1500
+        },
+        plugins: {
+            legend: {
+                position: 'top'
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

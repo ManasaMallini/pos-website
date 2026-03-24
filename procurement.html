@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Procurement</title>
+<link rel="stylesheet" href="/static/style.css">
+<a href="/procurement">Procurement</a>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>QuickPOS</h2>
+    <div class="nav-links">
+        <a href="/procurement">Procurement</a>
+        <a href="/inventory">Inventory</a>
+        <a href="/">Sales & Billing</a>
+    </div>
+</div>
+
+<div style="padding:20px">
+
+<!-- TABS -->
+<div class="tabs">
+    <button onclick="showTab('products')" class="active">Products</button>
+    <button onclick="showTab('suppliers')">Suppliers</button>
+    <button onclick="showTab('orders')">Orders & Tracking</button>
+</div>
+
+<!-- SEARCH -->
+<input type="text" id="search" placeholder="Search..." onkeyup="searchTable()">
+
+<!-- PRODUCTS -->
+<div id="products" class="tab-content">
+<h3>Product Catalog</h3>
+
+<table id="productTable">
+<tr>
+<th>Product</th><th>SKU</th><th>Category</th>
+<th>Price</th><th>Cost</th><th>Stock</th><th>Supplier</th>
+</tr>
+
+<tr><td>Coffee Beans</td><td>COF-001</td><td>Beverages</td><td>$24.99</td><td>$14.50</td><td>145</td><td>FreshFarm</td></tr>
+<tr><td>Speaker</td><td>ELC-012</td><td>Electronics</td><td>$79.99</td><td>$42.00</td><td>38</td><td>TechVault</td></tr>
+<tr><td>Olive Oil</td><td>FOD-034</td><td>Food</td><td>$18.49</td><td>$9.20</td><td>0</td><td>FreshFarm</td></tr>
+
+</table>
+</div>
+
+<!-- SUPPLIERS -->
+<div id="suppliers" class="tab-content" style="display:none">
+<h3>Suppliers</h3>
+
+<table>
+<tr><th>Name</th><th>Company</th><th>Phone</th></tr>
+<tr><td>John</td><td>FreshFarm</td><td>9876543210</td></tr>
+<tr><td>David</td><td>TechVault</td><td>9123456780</td></tr>
+</table>
+</div>
+
+<!-- ORDERS -->
+<div id="orders" class="tab-content" style="display:none">
+<h3>Orders</h3>
+
+<table>
+<tr><th>Order ID</th><th>Product</th><th>Status</th></tr>
+<tr><td>#101</td><td>Coffee</td><td>Delivered</td></tr>
+<tr><td>#102</td><td>Speaker</td><td>Pending</td></tr>
+</table>
+</div>
+
+</div>
+
+<script>
+
+// TAB SWITCH
+function showTab(tab){
+document.querySelectorAll('.tab-content').forEach(x=>x.style.display='none');
+document.getElementById(tab).style.display='block';
+}
+
+// SEARCH
+function searchTable(){
+let input=document.getElementById("search").value.toLowerCase();
+let rows=document.querySelectorAll("#productTable tr");
+
+rows.forEach((row,i)=>{
+if(i===0) return;
+row.style.display=row.innerText.toLowerCase().includes(input) ? "" : "none";
+});
+}
+
+</script>
+
+</body>
+</html>
