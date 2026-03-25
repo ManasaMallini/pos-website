@@ -1,10 +1,8 @@
 from flask import Flask, render_template, jsonify
-from flask_cors import CORS
 
-app = Flask(__name__, template_folder="templates", static_folder="static")
-CORS(app)
+app = Flask(__name__)
 
-# HOME (Billing Page)
+# HOME
 @app.route('/')
 def home():
     return render_template("index.html")
@@ -24,7 +22,7 @@ def products():
 def procurement():
     return render_template("procurement.html")
 
-# 🔥 IMPORTANT FIX (API for products)
+# 🔥 PRODUCTS API (VERY IMPORTANT)
 @app.route('/api/products')
 def get_products():
     return jsonify([
@@ -34,6 +32,6 @@ def get_products():
         {"name":"Chocolate","price":32,"stock":10}
     ])
 
-# RUN
+# 🔥 RUN (Render kosam)
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run()
