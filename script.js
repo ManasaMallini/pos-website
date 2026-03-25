@@ -1,48 +1,45 @@
 let cart = [];
 
-// LOAD PRODUCTS
+// Load products
 fetch('/api/products')
 .then(res => res.json())
 .then(data => {
-    let html = '';
+    let html = "";
     data.forEach(p => {
         html += `
-        <div class="product-card" onclick='addToCart(${JSON.stringify(p)})'>
+        <div class="card" onclick="addToCart('${p.name}', ${p.price})">
             <h4>${p.name}</h4>
-            <p>$${p.price}</p>
+            <p>₹${p.price}</p>
         </div>`;
     });
     document.getElementById("products").innerHTML = html;
 });
 
-// ADD TO CART
-function addToCart(product){
-    cart.push(product);
-    updateReceipt();
+function addToCart(name, price){
+    cart.push({name, price});
+    updateCart();
 }
 
-// UPDATE RECEIPT
-function updateReceipt(){
+function updateCart(){
     let html = "";
     let subtotal = 0;
 
     cart.forEach(item => {
         subtotal += item.price;
-        html += `<p>${item.name} - $${item.price}</p>`;
+        html += `<p>${item.name} - ₹${item.price}</p>`;
     });
 
-    let tax = subtotal * 0.08;
+    let tax = subtotal * 0.10;
     let total = subtotal + tax;
 
-    document.getElementById("receipt").innerHTML = html;
+    document.getElementById("cart").innerHTML = html || "No items";
     document.getElementById("subtotal").innerText = subtotal.toFixed(2);
     document.getElementById("tax").innerText = tax.toFixed(2);
     document.getElementById("total").innerText = total.toFixed(2);
 }
 
-// COMPLETE SALE
 function completeSale(){
-    alert("Payment Successful ✅");
+    alert("Sale Completed ✅");
     cart = [];
-    updateReceipt();
+    updateCart();
 }
