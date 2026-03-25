@@ -2,92 +2,137 @@
 <html>
 <head>
     <title>Inventory</title>
-    <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f6f8;
+        }
+
+        .navbar {
+            background: #1f8a70;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
     <h2>QuickPOS</h2>
-    <div class="nav-links">
-        <a href="/procurement">Procurement</a>
+    <div>
+        <a href="/">Sales</a>
         <a href="/inventory">Inventory</a>
-        <a href="/products">Products</a>
-        <a href="/">Sales & Billing</a>
+        <a href="/procurement">Procurement</a>
     </div>
 </div>
 
-<!-- MAIN LAYOUT -->
-<div class="dashboard">
+<div class="container">
 
-    <!-- LEFT: CARDS -->
-    <div class="cards">
-        <div class="card">
-            <h2>552</h2>
-            <small>Total Stock</small>
-        </div>
-
-        <div class="card">
-            <h2>$14,049</h2>
-            <small>Stock Value</small>
-        </div>
-
-        <div class="card">
-            <h2>$7,331</h2>
-            <small>Profit</small>
-        </div>
-
-        <div class="card">
-            <h2>1 / 2</h2>
-            <small>Low Stock</small>
-        </div>
+    <div class="card">
+        <h3>Inventory Graph</h3>
+        <canvas id="chart"></canvas>
     </div>
 
-    <!-- RIGHT: GRAPH -->
-    <div class="chart-box">
-        <canvas id="chart"></canvas>
+    <div class="card">
+        <h3>Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
     </div>
 
 </div>
 
 <script>
-const ctx = document.getElementById('chart');
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
-        datasets: [
-            {
-                label: 'Revenue',
-                data: [18,22,30,20,25,28],
-                backgroundColor: '#14b8a6'
-            },
-            {
-                label: 'Cost',
-                data: [10,14,18,15,16,17],
-                backgroundColor: '#fb7185'
-            },
-            {
-                label: 'Profit',
-                data: [8,8,12,5,9,11],
-                backgroundColor: '#22c55e'
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        animation: {
-            duration: 1500
-        },
-        plugins: {
-            legend: {
-                position: 'top'
-            }
+// 🔥 FALLBACK DATA (if API fails)
+let fallback = [
+    {name:"Coffee", stock:50},
+    {name:"Speaker", stock:20},
+    {name:"Olive Oil", stock:0},
+    {name:"USB Hub", stock:15}
+];
+
+// LOAD FUNCTION
+function loadData(data){
+
+    let names = [];
+    let stocks = [];
+    let html = "";
+
+    data.forEach(p=>{
+        names.push(p.name);
+        stocks.push(p.stock);
+
+        html += `
+        <tr>
+            <td>${p.name}</td>
+            <td>${p.stock}</td>
+        </tr>`;
+    });
+
+    document.getElementById("table").innerHTML = html;
+
+    new Chart(document.getElementById("chart"), {
+        type: 'bar',
+        data: {
+            labels: names,
+            datasets: [{
+                label: "Stock",
+                data: stocks
+            }]
         }
+    });
+}
+
+// TRY API FIRST
+fetch('/api/products/all')
+.then(res => res.json())
+.then(data => {
+    if(data && data.length > 0){
+        loadData(data);
+    } else {
+        loadData(fallback);
     }
+})
+.catch(()=>{
+    // API fail → fallback use
+    loadData(fallback);
 });
+
 </script>
 
 </body>
