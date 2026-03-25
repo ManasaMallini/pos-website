@@ -1,3 +1,7 @@
+import os
+from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
+from supabase import create_client
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 
