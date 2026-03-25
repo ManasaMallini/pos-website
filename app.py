@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 
-app = Flask(__name__, template_folder="templates")  ✅
+app = Flask(__name__, template_folder="templates")  
 CORS(app)
 
-# ✅ SUPABASE CONFIG (WORKING)
+# SUPABASE CONFIG (WORKING)
 url = "https://lchsnqstnmfuhiolrufq.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjaHNucXN0bm1mdWhpb2xydWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjg3MTYsImV4cCI6MjA4OTgwNDcxNn0.ZvSLwRG1t30ine5P05eRvuzxiGWXFBM8Qi1rxkYNG28"
 
