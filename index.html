@@ -6,32 +6,27 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <h2>QuickPOS</h2>
-    <div class="nav-links">
-        <a href="/procurement">Procurement</a>
-        <a href="/inventory">Inventory</a>
-        <a href="/products">Products</a>
-        <a href="/">Sales & Billing</a>
+<h2>🛒 QuickPOS</h2>
+
+<div class="container">
+
+    <!-- PRODUCTS -->
+    <div class="left">
+        <h3>Products</h3>
+        <div id="products"></div>
     </div>
-</div>
 
-<!-- PRODUCTS -->
-<div class="products" id="products"></div>
+    <!-- BILL -->
+    <div class="right" id="bill">
+        <h3>Bill</h3>
+        <div id="receipt"></div>
 
-<!-- RECEIPT (BOTTOM) -->
-<div class="bill" id="bill">
+        <p>Subtotal: $<span id="subtotal">0</span></p>
+        <p>Tax: $<span id="tax">0</span></p>
+        <h2>Total: $<span id="total">0</span></h2>
 
-    <h3>🧾 Receipt</h3>
-
-    <div id="receipt"></div>
-
-    <p>Subtotal: $<span id="subtotal">0</span></p>
-    <p>Tax (8%): $<span id="tax">0</span></p>
-    <h3>Total: $<span id="total">0</span></h3>
-
-    <button onclick="completeSale()">Complete Sale</button>
+        <button onclick="completeSale()">Complete Sale</button>
+    </div>
 
 </div>
 
