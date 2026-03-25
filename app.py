@@ -1,32 +1,24 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify, render_template
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/')
+# SAMPLE PRODUCTS
+products = [
+    {"id": 1, "name": "Coffee Beans 1kg", "price": 24.99, "stock": 10},
+    {"id": 2, "name": "Bluetooth Speaker", "price": 79.99, "stock": 5},
+    {"id": 3, "name": "USB-C Adapter", "price": 34.99, "stock": 8},
+    {"id": 4, "name": "Chocolate Box", "price": 32.99, "stock": 6},
+]
+
+@app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route('/inventory')
-def inventory():
-    return render_template("inventory.html")
-
-@app.route('/products')
-def products():
-    return render_template("products.html")
-
-@app.route('/procurement')
-def procurement():
-    return render_template("procurement.html")
-
-# 🔥 FIX (IMPORTANT)
-@app.route('/api/products')
+@app.route("/api/products")
 def get_products():
-    return jsonify([
-        {"name":"Coffee","price":10,"stock":50},
-        {"name":"Speaker","price":80,"stock":20},
-        {"name":"Olive Oil","price":18,"stock":0},
-        {"name":"Chocolate","price":32,"stock":10}
-    ])
+    return jsonify(products)
 
 if __name__ == "__main__":
     app.run()
