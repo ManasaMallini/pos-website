@@ -1,9 +1,7 @@
-import os
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from supabase import create_client
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")  ✅
 CORS(app)
 
 # ✅ SUPABASE CONFIG (WORKING)
