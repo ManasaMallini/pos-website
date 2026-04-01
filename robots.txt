@@ -1,2 +1,3 @@
-User-agent: *
-Allow: /
+@app.route("/robots.txt")
+def robots():
+    return "User-agent: *\nAllow: /\nSitemap: https://pos-website-13.onrender.com/sitemap.xml", 200, {"Content-Type": "text/plain"}
