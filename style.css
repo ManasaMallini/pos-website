@@ -1,68 +1,9 @@
-body {
-    font-family: Arial;
-    margin: 0;
-    background: #f5f5f5;
-}
-
-.navbar {
-    background: #1f8a70;
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.container {
-    display: flex;
-    padding: 20px;
-}
-
-.products {
-    width: 70%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.card {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.card:hover {
-    background: #e6f7f2;
-}
-
-.bill {
-    width: 30%;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-button {
-    padding: 10px;
-    margin: 5px;
-    border: none;
-    border-radius: 6px;
-}
-
-.complete {
-    width: 100%;
-    background: #ff8a80;
-    color: white;
-}
-.nav-btn {
-    background: #e0e0e0;
-    padding: 8px 15px;
-    margin-left: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: black;
-}
-
-.nav-btn:hover {
-    background: white;
-}
+body{font-family:Arial;margin:0;background:#f5f5f5;}
+.navbar{background:#1f8a70;color:white;padding:15px;display:flex;justify-content:space-between;}
+.container{padding:20px;}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
+.product,.card{background:white;padding:15px;border-radius:10px;}
+.product{cursor:pointer;}
+.product:hover{background:#e6f7f3;}
+.bill{margin-top:20px;padding:15px;}
+.btn{background:#1f8a70;color:white;padding:10px;border:none;border-radius:8px;cursor:pointer;margin-top:10px;}
