@@ -1,23 +1,21 @@
+
 import os
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from supabase import create_client
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
 
-app = Flask(__name__, template_folder="templates")  
+app = Flask(__name__)
 CORS(app)
 
-# SUPABASE CONFIG (WORKING)
+# Supabase config
 url = "https://lchsnqstnmfuhiolrufq.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjaHNucXN0bm1mdWhpb2xydWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjg3MTYsImV4cCI6MjA4OTgwNDcxNn0.ZvSLwRG1t30ine5P05eRvuzxiGWXFBM8Qi1rxkYNG28"
 
 supabase = create_client(url, key)
 
 # ───────── FRONTEND ROUTES ─────────
-
 @app.route("/")
-def index():
+def sales():
     return render_template("index.html")
 
 @app.route("/inventory")
@@ -30,7 +28,6 @@ def procurement():
 
 
 # ───────── PRODUCTS API ─────────
-
 @app.route("/api/products/all", methods=["GET"])
 def get_products():
     try:
@@ -44,48 +41,69 @@ def get_products():
 def add_product():
     try:
         data = request.get_json()
+        print("PRODUCT DATA:", data)   # 🔥 debug
 
-        payload = {
-            "name": data.get("name"),
-            "price": float(data.get("price", 0)),
-            "stock": int(data.get("stock", 0)),
-            "is_active": True
-        }
+        name = data.get("name")
+        price = data.get("price")
+        stock = data.get("stock")
+        supplier = data.get("supplier", "")
 
-        res = supabase.table("products").insert(payload).execute()
+        if not name or not price or not stock:
+            return jsonify({"error": "Missing fields"}), 400
 
-        return jsonify(res.data), 201
+        result = supabase.table("products").insert({
+            "name": name,
+            "price": float(price),
+            "stock": int(stock),
+            "supplier": supplier
+        }).execute()
+
+        return jsonify(result.data)
 
     except Exception as e:
+        print("PRODUCT ERROR:", e)
         return jsonify({"error": str(e)}), 500
 
-
-# ───────── ORDERS API (BASIC) ─────────
-
+# ───────── ORDERS API ─────────
 @app.route("/api/orders", methods=["POST"])
 def create_order():
     try:
         data = request.get_json()
 
+        print("DATA RECEIVED:", data)  # 🔥 debug
+
         res = supabase.table("orders").insert({
-            "total": data.get("total"),
-            "payment_method": "Cash"
+            "total": data["total"],
+            "payment_method": data.get("payment_method","Cash"),
+            "items": data.get("items", [])
         }).execute()
 
-        return jsonify(res.data), 201
+        return jsonify(res.data)
 
     except Exception as e:
+        print("ERROR:", e)
         return jsonify({"error": str(e)}), 500
+    
+    # SUPPLIERS API
+# 🔥 SUPPLIERS (STATIC DATA)
+@app.route("/api/suppliers", methods=["GET"])
+def get_suppliers():
+    return jsonify([
+        {"name":"FreshFarm Distributors","location":"India","contact":"+91 9876543210"},
+        {"name":"TechVault Supply Co.","location":"USA","contact":"+1 234567890"},
+        {"name":"Global Goods Inc.","location":"UK","contact":"+44 987654321"},
+        {"name":"Premium Packaging Ltd.","location":"Germany","contact":"+49 123456789"}
+    ])
 
 
-# ───────── ERROR HANDLER ─────────
-
-@app.errorhandler(Exception)
-def handle_error(e):
-    return jsonify({"error": str(e)}), 500
-
-
-# ───────── RUN ─────────
+# 🔥 ORDERS (STATIC DATA)
+@app.route("/api/orders/all", methods=["GET"])
+def get_orders():
+    return jsonify([
+        {"id":"ORD001","total":500,"payment_method":"Cash","created_at":"2026-03-25"},
+        {"id":"ORD002","total":1200,"payment_method":"Card","created_at":"2026-03-26"},
+        {"id":"ORD003","total":300,"payment_method":"UPI","created_at":"2026-03-27"}
+    ])
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
