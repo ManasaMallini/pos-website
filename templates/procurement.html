@@ -1,282 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Procurement</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #f4f6f8;
-        }
-
-        .navbar {
-            background: linear-gradient(to right, #1f8a70, #2bbbad);
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .tab {
-            padding: 10px 15px;
-            background: #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .active {
-            background: #1f8a70;
-            color: white;
-        }
-
-        input {
-            padding: 10px;
-            width: 300px;
-            margin-bottom: 15px;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .btn {
-            background: #1f8a70;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-
-        .green { background: #d4edda; }
-        .red { background: #f8d7da; }
-        .yellow { background: #fff3cd; }
-    </style>
+<title>Procurement</title>
+<style>
+body{font-family:Arial;margin:0;background:linear-gradient(135deg,#ff9a9e,#fad0c4);}
+.navbar{background:#6a0572;color:white;padding:15px;display:flex;justify-content:space-between;}
+.navbar a{color:white;text-decoration:none;margin-left:15px;font-weight:bold;}
+.container{padding:20px;}
+.tabs{display:flex;gap:10px;margin-bottom:20px;}
+.tab{padding:10px 15px;background:#ddd;border-radius:8px;cursor:pointer;}
+.active{background:#6a0572;color:white;}
+input{padding:10px;margin:5px;width:250px;border-radius:5px;border:1px solid #ccc;}
+.btn{background:#6a0572;color:white;padding:10px;border:none;border-radius:8px;cursor:pointer;}
+table{width:100%;border-collapse:collapse;margin-top:20px;background:white;}
+th,td{padding:10px;border-bottom:1px solid #ddd;}
+th{background:#6a0572;color:white;}
+</style>
 </head>
-
 <body>
 
 <div class="navbar">
-    <h2>QuickPOS</h2>
-    <div>
-        <a href="/">Sales & Billing</a>
-        <a href="/inventory">Inventory</a>
-        <a href="/procurement">Procurement</a>
-    </div>
+<h2>Procurement</h2>
+<div>
+<a href="/">Sales</a>
+<a href="/inventory">Inventory</a>
+</div>
 </div>
 
 <div class="container">
 
-    <!-- TABS -->
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('products')">Products</div>
-        <div class="tab" onclick="showTab('suppliers')">Suppliers</div>
-        <div class="tab" onclick="showTab('orders')">Orders & Tracking</div>
-    </div>
+<div class="tabs">
+<div class="tab active" onclick="showTab('products')">Products</div>
+<div class="tab" onclick="showTab('suppliers')">Suppliers</div>
+<div class="tab" onclick="showTab('orders')">Orders</div>
+</div>
 
-    <!-- SEARCH -->
-    <input type="text" placeholder="Search products..." id="search" onkeyup="loadProducts()">
+<!-- PRODUCTS -->
+<div id="products">
+<h3>Add Product</h3>
+<input id="pname" placeholder="Name">
+<input id="pprice" placeholder="Price">
+<input id="pstock" placeholder="Stock">
+<input id="psupplier" placeholder="Supplier">
+<button class="btn" onclick="addProduct()">Add</button>
 
-    <!-- PRODUCTS -->
-    <div id="products" class="card">
-        <h3>Product Catalog 
-            <button class="btn" onclick="addProduct()">+ Add Product</button>
-        </h3>
+<table>
+<thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Supplier</th></tr></thead>
+<tbody id="productTable"></tbody>
+</table>
+</div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Supplier</th>
-                </tr>
-            </thead>
-            <tbody id="table"></tbody>
-        </table>
-    </div>
+<!-- SUPPLIERS -->
+<div id="suppliers" style="display:none;">
+<h3>Add Supplier</h3>
+<input id="sname" placeholder="Supplier Name">
+<input id="slocation" placeholder="Location">
+<input id="scontact" placeholder="Contact">
+<button class="btn" onclick="addSupplier()">Add</button>
 
-    <!-- SUPPLIERS -->
-    <div id="suppliers" class="card" style="display:none;">
-        <h3>Suppliers</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Contact</th>
-                </tr>
-            </thead>
-            <tbody id="suppliersTable"></tbody>
-        </table>
-    </div>
+<table>
+<thead><tr><th>Name</th><th>Location</th><th>Contact</th></tr></thead>
+<tbody id="supplierTable"></tbody>
+</table>
+</div>
 
-    <!-- ORDERS -->
-    <div id="orders" class="card" style="display:none;">
-        <h3>Orders & Tracking</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="ordersTable"></tbody>
-        </table>
-    </div>
+<!-- ORDERS -->
+<div id="orders" style="display:none;">
+<h3>Orders Tracking</h3>
+<table>
+<thead><tr><th>ID</th><th>Total</th><th>Payment</th><th>Date</th></tr></thead>
+<tbody id="orderTable"></tbody>
+</table>
+</div>
 
 </div>
 
 <script>
 
-// ✅ SAMPLE DATA
-let products = [
-    {name:"Organic Coffee Beans 1kg", price:24.99, stock:145, supplier:"FreshFarm Distributors"},
-    {name:"Wireless Bluetooth Speaker", price:79.99, stock:38, supplier:"TechVault Supply Co."},
-    {name:"Premium Olive Oil 500ml", price:18.49, stock:0, supplier:"FreshFarm Distributors"},
-    {name:"USB-C Hub Adapter", price:34.99, stock:72, supplier:"TechVault Supply Co."},
-    {name:"Artisan Chocolate Box", price:32.99, stock:8, supplier:"Global Goods Inc."},
-    {name:"Eco-Friendly Tote Bag", price:12.99, stock:230, supplier:"Premium Packaging Ltd."},
-    {name:"Stainless Steel Tumbler", price:27.99, stock:56, supplier:"Global Goods Inc."},
-    {name:"Herbal Tea Collection", price:15.99, stock:3, supplier:"FreshFarm Distributors"}
-];
-
-let suppliers = [
-    {name:"FreshFarm Distributors", location:"India", contact:"+91 9876543210"},
-    {name:"TechVault Supply Co.", location:"USA", contact:"+1 234567890"},
-    {name:"Global Goods Inc.", location:"UK", contact:"+44 987654321"},
-    {name:"Premium Packaging Ltd.", location:"Germany", contact:"+49 123456789"}
-];
-
-let orders = [
-    {id:"ORD001", product:"Coffee Beans", status:"Delivered"},
-    {id:"ORD002", product:"Speaker", status:"Shipped"},
-    {id:"ORD003", product:"Olive Oil", status:"Pending"},
-    {id:"ORD004", product:"Tote Bag", status:"Delivered"}
-];
-
-// 🔄 TAB SWITCH
+// TAB SWITCH
 function showTab(tab){
-    document.getElementById("products").style.display = "none";
-    document.getElementById("suppliers").style.display = "none";
-    document.getElementById("orders").style.display = "none";
+    document.getElementById("products").style.display="none";
+    document.getElementById("suppliers").style.display="none";
+    document.getElementById("orders").style.display="none";
 
-    document.getElementById(tab).style.display = "block";
+    document.getElementById(tab).style.display="block";
 
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     event.target.classList.add("active");
 
-    if(tab === "suppliers") loadSuppliers();
-    if(tab === "orders") loadOrders();
+    if(tab==="suppliers") loadSuppliers();
+    if(tab==="orders") loadOrders();
 }
 
-// 📦 LOAD PRODUCTS
-function loadProducts(){
-    let search = document.getElementById("search").value.toLowerCase();
-    let html = "";
+// PRODUCTS
+async function loadProducts(){
+    const res = await fetch("/api/products/all");
+    const data = await res.json();
 
-    products.forEach(p => {
-
-        if(search && !p.name.toLowerCase().includes(search)) return;
-
-        let cls = "green";
-        if(p.stock == 0) cls = "red";
-        else if(p.stock < 10) cls = "yellow";
-
-        html += `
-        <tr>
-            <td>${p.name}</td>
-            <td>₹${p.price}</td>
-            <td><span class="badge ${cls}">${p.stock}</span></td>
-            <td>${p.supplier}</td>
+    let html="";
+    data.forEach(p=>{
+        html+=`<tr>
+        <td>${p.name}</td>
+        <td>₹${p.price}</td>
+        <td>${p.stock}</td>
+        <td>${p.supplier||""}</td>
         </tr>`;
     });
-
-    document.getElementById("table").innerHTML = html;
+    document.getElementById("productTable").innerHTML=html;
 }
 
-// 🏢 LOAD SUPPLIERS
-function loadSuppliers(){
-    let html = "";
+async function addProduct(){
+    const res = await fetch("/api/products",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            name:pname.value,
+            price:pprice.value,
+            stock:pstock.value,
+            supplier:psupplier.value
+        })
+    });
 
-    suppliers.forEach(s => {
-        html += `
-        <tr>
-            <td>${s.name}</td>
-            <td>${s.location}</td>
-            <td>${s.contact}</td>
+    if(res.ok){
+        alert("Product Added");
+        loadProducts();
+    }else{
+        alert("Error adding product");
+    }
+}
+
+// SUPPLIERS
+async function loadSuppliers(){
+    const res = await fetch("/api/suppliers");
+    const data = await res.json();
+
+    let html="";
+    data.forEach(s=>{
+        html+=`<tr>
+        <td>${s.name}</td>
+        <td>${s.location}</td>
+        <td>${s.contact}</td>
         </tr>`;
     });
-
-    document.getElementById("suppliersTable").innerHTML = html;
+    document.getElementById("supplierTable").innerHTML=html;
 }
 
-// 🚚 LOAD ORDERS
-function loadOrders(){
-    let html = "";
+async function addSupplier(){
+    await fetch("/api/suppliers",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            name:sname.value,
+            location:slocation.value,
+            contact:scontact.value
+        })
+    });
 
-    orders.forEach(o => {
-        html += `
-        <tr>
-            <td>${o.id}</td>
-            <td>${o.product}</td>
-            <td>${o.status}</td>
+    alert("Supplier Added");
+    loadSuppliers();
+}
+
+// ORDERS
+async function loadOrders(){
+    const res = await fetch("/api/orders/all");
+    const data = await res.json();
+
+    let html="";
+    data.forEach(o=>{
+        html+=`<tr>
+        <td>${o.id}</td>
+        <td>₹${o.total}</td>
+        <td>${o.payment_method}</td>
+        <td>${o.created_at}</td>
         </tr>`;
     });
-
-    document.getElementById("ordersTable").innerHTML = html;
-}
-
-// ➕ ADD PRODUCT
-function addProduct(){
-    let name = prompt("Enter product name");
-    let price = prompt("Enter price");
-    let stock = prompt("Enter stock");
-
-    products.push({
-        name:name,
-        price:parseFloat(price),
-        stock:parseInt(stock),
-        supplier:"Manual Entry"
-    });
-
-    loadProducts();
+    document.getElementById("orderTable").innerHTML=html;
 }
 
 // INIT
 loadProducts();
 
 </script>
-
 </body>
 </html>
