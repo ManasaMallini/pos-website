@@ -2,6 +2,7 @@
 import os
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+from flask import Response
 from supabase import create_client
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ supabase = create_client(url, key)
 
 # ───────── FRONTEND ROUTES ─────────
 @app.route("/")
-def sales():
+def index():
     return render_template("index.html")
 
 @app.route("/inventory")
@@ -49,9 +50,9 @@ def sitemap():
    <url>
       <loc>https://pos-website-13.onrender.com/procurement</loc>
    </url>
-</urlset>
-"""
-    return xml, 200, {"Content-Type": "application/xml"}
+</urlset>"""
+    
+    return Response(xml, mimetype='application/xml')
 
 
 @app.route("/api/products", methods=["POST"])
