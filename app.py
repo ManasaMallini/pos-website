@@ -35,6 +35,21 @@ def get_products():
         return jsonify(res.data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+        
+@app.route("/sitemap.xml")
+def sitemap():
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://pos-website-13.onrender.com/</loc>
+   </url>
+   <url>
+      <loc>https://pos-website-13.onrender.com/inventory</loc>
+   </url>
+   <url>
+      <loc>https://pos-website-13.onrender.com/procurement</loc>
+   </url>
+</urlset>""", 200, {'Content-Type': 'application/xml'}
 
 
 @app.route("/api/products", methods=["POST"])
