@@ -1,139 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inventory</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #f4f6f8;
-        }
-
-        .navbar {
-            background: #1f8a70;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            background: white;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-    </style>
+<title>Inventory</title>
+<style>
+body{font-family:Arial;margin:0;background:linear-gradient(135deg,#89f7fe,#66a6ff);}
+.navbar{background:#05445e;color:white;padding:15px;display:flex;justify-content:space-between;}
+.navbar a{color:white;text-decoration:none;margin-left:15px;font-weight:bold;}
+.container{padding:20px;}
+table{width:100%;border-collapse:collapse;margin-top:20px;background:white;border-radius:10px;overflow:hidden;}
+th,td{padding:12px;border-bottom:1px solid #ddd;text-align:left;}
+th{background:#05445e;color:white;}
+.chart-container{margin-top:30px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-
 <div class="navbar">
-    <h2>QuickPOS</h2>
-    <div>
-        <a href="/">Sales</a>
-        <a href="/inventory">Inventory</a>
-        <a href="/procurement">Procurement</a>
-    </div>
+<h2>Inventory</h2>
+<div>
+<a href="/">Sales</a>
+<a href="/procurement">Procurement</a>
+</div>
 </div>
 
 <div class="container">
+<h3>Current Stock</h3>
+<table>
+<thead><tr><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
+<tbody id="invTable"></tbody>
+</table>
 
-    <div class="card">
-        <h3>Inventory Graph</h3>
-        <canvas id="chart"></canvas>
-    </div>
-
-    <div class="card">
-        <h3>Products</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Stock</th>
-                </tr>
-            </thead>
-            <tbody id="table"></tbody>
-        </table>
-    </div>
-
+<h3>Profit/Loss Chart</h3>
+<div class="chart-container">
+<canvas id="profitChart" height="150"></canvas>
+</div>
 </div>
 
 <script>
-
-// 🔥 FALLBACK DATA (if API fails)
-let fallback = [
-    {name:"Coffee", stock:50},
-    {name:"Speaker", stock:20},
-    {name:"Olive Oil", stock:0},
-    {name:"USB Hub", stock:15}
-];
-
-// LOAD FUNCTION
-function loadData(data){
-
-    let names = [];
-    let stocks = [];
-    let html = "";
-
+async function loadInventory(){
+    const res = await fetch("/api/products/all");
+    const data = await res.json();
+    let html=""; let labels=[], profits=[];
     data.forEach(p=>{
-        names.push(p.name);
-        stocks.push(p.stock);
-
-        html += `
-        <tr>
-            <td>${p.name}</td>
-            <td>${p.stock}</td>
-        </tr>`;
+        html+=`<tr><td>${p.name}</td><td>${p.stock}</td><td>₹${p.price}</td></tr>`;
+        labels.push(p.name);
+        profits.push(p.price*p.stock); // simple stock*price as potential profit
     });
+    document.getElementById("invTable").innerHTML = html;
 
-    document.getElementById("table").innerHTML = html;
-
-    new Chart(document.getElementById("chart"), {
-        type: 'bar',
-        data: {
-            labels: names,
-            datasets: [{
-                label: "Stock",
-                data: stocks
-            }]
-        }
+    new Chart(document.getElementById("profitChart"),{
+        type:'bar',
+        data:{labels:labels,datasets:[{label:'Potential Profit',data:profits,backgroundColor:'rgba(75,192,192,0.6)'}]},
+        options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
     });
 }
 
-// TRY API FIRST
-fetch('/api/products/all')
-.then(res => res.json())
-.then(data => {
-    if(data && data.length > 0){
-        loadData(data);
-    } else {
-        loadData(fallback);
-    }
-})
-.catch(()=>{
-    // API fail → fallback use
-    loadData(fallback);
-});
-
+loadInventory();
 </script>
-
 </body>
 </html>
