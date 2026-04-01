@@ -1,187 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>QuickPOS</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #f4f6f8;
-        }
+<!-- 🔹 LEVEL 1: ON-PAGE SEO -->
+<meta charset="UTF-8">
+<meta name="description" content="QuickPOS system for billing, inventory and procurement management">
+<meta name="keywords" content="POS, billing system, inventory, procurement, sales software">
+<meta name="author" content="Manasa">
 
-        .navbar {
-            background: linear-gradient(to right, #1f8a70, #2bbbad);
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-        }
+<!-- 🔹 LEVEL 2: TECHNICAL SEO -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
 
-        .container {
-            padding: 20px;
-        }
+<!-- 🔹 LEVEL 5: ADVANCED SEO -->
+<meta property="og:title" content="QuickPOS System">
+<meta property="og:description" content="Smart POS system for billing and inventory management">
+<meta property="og:type" content="website">
 
-        h2 {
-            margin-bottom: 10px;
-        }
+<title>QuickPOS - Sales & Billing System</title>
 
-        /* PRODUCTS GRID */
-        .products {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
+<style>
+body{font-family:Arial;margin:0;background:linear-gradient(135deg,#1f8a70,#6fb1fc);}
+.navbar{background:#0f3d3e;color:white;padding:15px;display:flex;justify-content:space-between;}
+.navbar a{color:white;text-decoration:none;margin-left:15px;font-weight:bold;}
+.container{padding:20px;}
+#products{display:flex;flex-wrap:wrap;gap:20px;}
 
-        .product {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.product{
+background:linear-gradient(145deg,#fdfbfb,#ebedee);
+padding:25px;
+width:200px;
+text-align:center;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
+cursor:pointer;
+transition:transform 0.2s;
+font-weight:bold;
+font-size:20px;
+}
 
-        .product:hover {
-            background: #e6f7f3;
-        }
+.product:hover{
+transform:scale(1.1);
+background:linear-gradient(145deg,#ffeaa7,#fab1a0);
+}
 
-        /* BILL (BOTTOM) */
-        .bill {
-            margin-top: 30px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-        }
+table{width:100%;border-collapse:collapse;margin-top:30px;background:white;border-radius:10px;overflow:hidden;}
+th,td{padding:12px;border-bottom:1px solid #ddd;}
+th{background:#1f8a70;color:white;}
 
-        .bill table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.btn{
+background:#1f8a70;
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+font-weight:bold;
+}
 
-        .bill th, .bill td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+.btn:hover{background:#6fb1fc;}
+</style>
 
-        .total {
-            text-align: right;
-            font-size: 18px;
-            margin-top: 10px;
-        }
-
-        .btn {
-            background: #1f8a70;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-    </style>
 </head>
 
 <body>
 
+<!-- 🔹 LEVEL 3: NAVIGATION SEO -->
 <div class="navbar">
-    <h2>QuickPOS</h2>
-    <div>
-        <a href="/">Sales & Billing</a>
-        <a href="/inventory">Inventory</a>
-        <a href="/procurement">Procurement</a>
-    </div>
+<h1>QuickPOS</h1>
+<div>
+<a href="/inventory">Inventory</a> 
+<a href="/procurement">Procurement</a>
+</div>
 </div>
 
 <div class="container">
 
-    <h2>Products</h2>
+<!-- 🔹 LEVEL 3: STRUCTURED HEADINGS -->
+<h2>Sales & Billing</h2>
 
-    <!-- PRODUCTS -->
-    <div class="products" id="products"></div>
+<h3>Products</h3>
+<div id="products"></div>
 
-    <!-- BILL (BOTTOM) -->
-    <div class="bill">
-        <h3>Current Bill</h3>
+<h3>Bill</h3>
+<table>
+<thead><tr><th>Name</th><th>Qty</th><th>Price</th></tr></thead>
+<tbody id="billTable"></tbody>
+</table>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody id="billTable"></tbody>
-        </table>
+<h3>Total: ₹<span id="total">0</span></h3>
 
-        <div class="total">
-            Total: ₹<span id="total">0</span>
-        </div>
-
-        <button class="btn" onclick="checkout()">Generate Bill</button>
-    </div>
+<button class="btn" onclick="checkout()">Generate & Print Bill</button>
 
 </div>
 
 <script>
+let cart = [];
 
-// SAMPLE PRODUCTS (you can replace with API later)
-let products = [
-    {name:"Coffee", price:100},
-    {name:"Tea", price:50},
-    {name:"Burger", price:120},
-    {name:"Pizza", price:200},
-    {name:"Sandwich", price:80},
-    {name:"Juice", price:60}
-];
+async function loadProducts() {
+    const res = await fetch("/api/products/all");
+    const data = await res.json();
 
-let bill = [];
-
-// LOAD PRODUCTS
-function loadProducts(){
     let html = "";
-
-    products.forEach((p,i)=>{
+    data.forEach(p=>{
         html += `
-        <div class="product" onclick="addToBill(${i})">
-            <h4>${p.name}</h4>
-            <p>₹${p.price}</p>
+        <div class="product" onclick="addToCart(${p.id},'${p.name}',${p.price})">
+            ${p.name}<br>₹${p.price}
         </div>`;
     });
 
     document.getElementById("products").innerHTML = html;
 }
 
-// ADD TO BILL
-function addToBill(i){
-    let item = products[i];
+function addToCart(id,name,price){
+    let item = cart.find(c=>c.id===id);
 
-    let found = bill.find(b=>b.name===item.name);
-
-    if(found){
-        found.qty += 1;
-    } else {
-        bill.push({...item, qty:1});
+    if(item){
+        item.qty++;
+    }else{
+        cart.push({id,name,price,qty:1});
     }
 
     updateBill();
 }
 
-// UPDATE BILL
 function updateBill(){
     let html = "";
     let total = 0;
 
-    bill.forEach(b=>{
-        total += b.price * b.qty;
+    cart.forEach(c=>{
+        let rowTotal = c.price * c.qty;
+        total += rowTotal;
 
         html += `
         <tr>
-            <td>${b.name}</td>
-            <td>${b.qty}</td>
-            <td>₹${b.price * b.qty}</td>
+            <td>${c.name}</td>
+            <td>${c.qty}</td>
+            <td>₹${rowTotal}</td>
         </tr>`;
     });
 
@@ -189,16 +145,55 @@ function updateBill(){
     document.getElementById("total").innerText = total;
 }
 
-// CHECKOUT
-function checkout(){
-    alert("Bill Generated ₹" + document.getElementById("total").innerText);
-    bill = [];
+async function checkout(){
+
+    if(cart.length === 0){
+        alert("Cart empty!");
+        return;
+    }
+
+    let total = cart.reduce((sum,c)=>sum + c.price*c.qty,0);
+
+    await fetch("/api/orders",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            total: total,
+            payment_method: "Cash",
+            items: cart
+        })
+    });
+
+    let billHTML = `
+    <h2 style="text-align:center;">🧾 QuickPOS Bill</h2>
+    <table border="1" width="100%" cellpadding="10">
+        <tr><th>Name</th><th>Qty</th><th>Price</th></tr>
+    `;
+
+    cart.forEach(c=>{
+        billHTML += `
+        <tr>
+            <td>${c.name}</td>
+            <td>${c.qty}</td>
+            <td>₹${c.price*c.qty}</td>
+        </tr>`;
+    });
+
+    billHTML += `
+    </table>
+    <h3 style="text-align:right;">Total: ₹${total}</h3>
+    `;
+
+    let win = window.open("", "", "width=600,height=600");
+    win.document.write(billHTML);
+    win.document.close();
+    win.print();
+
+    cart = [];
     updateBill();
 }
 
-// INIT
 loadProducts();
-
 </script>
 
 </body>
